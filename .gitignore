@@ -1,0 +1,59 @@
+# Sistema Operativo (macOS / Windows / Linux)
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Dependencias Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# Builds y Compilaciones
+dist/
+build/
+out/
+.next/
+*.tsbuildinfo
+
+# Variables de Entorno y Secretos
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# Bases de datos y Volúmenes locales de Docker
+infra/data/
+postgres_data/
+rabbitmq_data/
+redis_data/
+
+# Expo / React Native
+.expo/
+web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Cobertura y Tests
+coverage/
+.nyc_output/
+
+# IDEs y Editores
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.sublime-project
+*.sublime-workspace

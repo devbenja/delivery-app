@@ -1,0 +1,79 @@
+{
+  "project_name": "Delivery App (Estilo PedidosYa)",
+  "current_phase": 0,
+  "phase_title": "Fase 0 — Entorno Base e Infraestructura",
+  "last_updated": "2026-09-17T16:15:00Z",
+  "members": {
+    "humano": {
+      "id": "humano",
+      "name": "Benja (Tech Lead)",
+      "role": "Product Owner / Tech Lead",
+      "avatar_type": "leader",
+      "status": "active",
+      "current_task": "Preparando traspaso y clonación en MacBook M1",
+      "status_label": "Supervisando",
+      "dialog_bubble": "¡Revisando que el entorno y el plan estén listos para arrancar!"
+    },
+    "agente_1": {
+      "id": "agente_1",
+      "name": "Agente 1 (Arquitecto & QA)",
+      "role": "Arquitecto de Software y Pruebas",
+      "avatar_type": "architect",
+      "status": "working",
+      "current_task": "Creando docker-compose.yml y contratos base",
+      "status_label": "Diseñando",
+      "dialog_bubble": "Infraestructura base para Postgres, RabbitMQ y Redis lista en ARM64."
+    },
+    "agente_2": {
+      "id": "agente_2",
+      "name": "Agente 2 (Core Developer)",
+      "role": "Desarrollador Backend / Frontend",
+      "avatar_type": "developer",
+      "status": "idle",
+      "current_task": "Esperando inicio de codificación de la Fase 1 (Pedidos)",
+      "status_label": "En espera",
+      "dialog_bubble": "Listo para programar los módulos de NestJS apenas se aprueben los contratos."
+    }
+  },
+  "tasks": [
+    {
+      "id": "t-001",
+      "title": "Estructura Monorepo y Carpetas",
+      "phase": 0,
+      "assignee": "agente_1",
+      "status": "done"
+    },
+    {
+      "id": "t-002",
+      "title": "Docker Compose (Postgres, RabbitMQ, Redis)",
+      "phase": 0,
+      "assignee": "agente_1",
+      "status": "done"
+    },
+    {
+      "id": "t-003",
+      "title": "Dashboard Pixel Art del Equipo",
+      "phase": 0,
+      "assignee": "agente_1",
+      "status": "in_progress"
+    },
+    {
+      "id": "t-004",
+      "title": "Clonar y ejecutar en MacBook M1",
+      "phase": 0,
+      "assignee": "humano",
+      "status": "todo"
+    },
+    {
+      "id": "t-005",
+      "title": "Fase 1: Contrato y Outbox de Pedidos",
+      "phase": 1,
+      "assignee": "agente_2",
+      "status": "backlog"
+    }
+  ],
+  "checkpoint": {
+    "condition_technical": "Ejecutar docker compose up -d y ver todos los contenedores saludables.",
+    "condition_pedagogic": "Explicar por qué aislamos schemas en Postgres y para qué sirve Redis junto a Postgres."
+  }
+}

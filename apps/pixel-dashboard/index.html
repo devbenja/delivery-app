@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Dev Office — Antigravity Agent Team</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f111a;
+      --bg-office: #1a1c2e;
+      --floor-color: #262940;
+      --floor-line: #1e2133;
+      --wall-color: #141726;
+      --accent-cyan: #00f0ff;
+      --accent-green: #00ff88;
+      --accent-yellow: #ffe600;
+      --accent-purple: #bd00ff;
+      --accent-red: #ff3366;
+      --text-main: #e2e8f0;
+      --text-muted: #8a99ad;
+      --border-pixel: 3px solid #000;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      image-rendering: pixelated;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    /* CRT Scanline Effect (Opcional) */
+    .crt-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    header {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #181b2b;
+      border: 4px solid #3b4261;
+      padding: 12px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 0 #000;
+    }
+
+    .title-box h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 16px;
+      color: var(--accent-cyan);
+      text-shadow: 2px 2px #000;
+      margin-bottom: 6px;
+    }
+
+    .phase-badge {
+      display: inline-block;
+      background: var(--accent-purple);
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 4px 8px;
+      border: 2px solid #000;
+    }
+
+    .header-controls button {
+      background: #282c3f;
+      color: var(--accent-green);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 8px 12px;
+      border: 3px solid #000;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #000;
+      transition: all 0.1s ease;
+    }
+
+    .header-controls button:active {
+      transform: translateY(4px);
+      box-shadow: none;
+    }
+
+    /* ESCENARIO DE LA OFICINA PIXEL ART */
+    .office-stage {
+      width: 100%;
+      max-width: 1100px;
+      background: var(--bg-office);
+      border: 6px solid #2d314d;
+      box-shadow: 0 10px 0 #000;
+      padding: 24px;
+      position: relative;
+      margin-bottom: 24px;
+      background-image: 
+        linear-gradient(to bottom, var(--wall-color) 0%, var(--wall-color) 40%, var(--floor-color) 40%, var(--floor-color) 100%);
+    }
+
+    .office-banner {
+      text-align: center;
+      background: rgba(0,0,0,0.5);
+      border: 2px dashed #49516a;
+      padding: 6px;
+      font-size: 18px;
+      color: var(--accent-yellow);
+      margin-bottom: 20px;
+    }
+
+    .desks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 850px) {
+      .desks-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ESTACIÓN DE CADA PERSONAJE */
+    .desk-card {
+      background: #1f2338;
+      border: 4px solid #000;
+      padding: 16px;
+      position: relative;
+      box-shadow: 0 6px 0 #0f111a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .desk-card.active-work {
+      border-color: var(--accent-cyan);
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+      0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(0, 240, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+    }
+
+    /* GLOBO DE DIÁLOGO PIXEL */
+    .bubble {
+      background: #fff;
+      color: #000;
+      padding: 8px 12px;
+      font-size: 16px;
+      line-height: 1.2;
+      border: 3px solid #000;
+      position: relative;
+      width: 100%;
+      min-height: 56px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+    }
+    .bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px 8px 0;
+      border-style: solid;
+      border-color: #fff transparent;
+      display: block;
+      width: 0;
+    }
+
+    /* AVATARES PIXELADOS EN CSS/SVG */
+    .avatar-wrapper {
+      width: 96px;
+      height: 96px;
+      background: #111424;
+      border: 3px solid #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .pixel-character {
+      width: 64px;
+      height: 64px;
+      animation: idle-bob 1s steps(2) infinite;
+    }
+
+    @keyframes idle-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .desk-info {
+      width: 100%;
+      text-align: center;
+    }
+
+    .member-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .member-role {
+      color: var(--accent-yellow);
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 2px 10px;
+      font-size: 16px;
+      border: 2px solid #000;
+      text-transform: uppercase;
+    }
+
+    .status-working { background: var(--accent-cyan); color: #000; }
+    .status-active  { background: var(--accent-green); color: #000; }
+    .status-idle    { background: #4a5568; color: #cbd5e1; }
+
+    .current-task-box {
+      margin-top: 10px;
+      padding: 8px;
+      background: #121422;
+      border: 2px dashed #3a415e;
+      font-size: 17px;
+      color: #cbd5e1;
+      width: 100%;
+      text-align: left;
+    }
+    .current-task-box span {
+      color: var(--accent-cyan);
+      display: block;
+      font-size: 14px;
+    }
+
+    /* TABLERO KANBAN DE FASES Y TAREAS */
+    .kanban-section {
+      width: 100%;
+      max-width: 1100px;
+      background: #181b2b;
+      border: 4px solid #2d314d;
+      padding: 20px;
+      box-shadow: 0 8px 0 #000;
+    }
+
+    .kanban-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #2d314d;
+      padding-bottom: 8px;
+    }
+
+    .kanban-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: var(--accent-green);
+    }
+
+    .kanban-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 800px) {
+      .kanban-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kanban-col {
+      background: #121422;
+      border: 3px solid #000;
+      padding: 10px;
+      min-height: 180px;
+    }
+
+    .col-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #313754;
+      text-align: center;
+    }
+
+    .task-item {
+      background: #242940;
+      border: 2px solid #000;
+      padding: 8px;
+      margin-bottom: 8px;
+      font-size: 17px;
+      box-shadow: 0 3px 0 #000;
+    }
+
+    .task-badge {
+      display: inline-block;
+      font-size: 12px;
+      padding: 1px 6px;
+      border: 1px solid #000;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    /* FOOTER INFO */
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+    footer a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="crt-overlay"></div>
+
+  <header>
+    <div class="title-box">
+      <h1>🕹️ PIXEL DEV OFFICE</h1>
+      <span class="phase-badge" id="current-phase-badge">FASE 0: ENTORNO BASE</span>
+    </div>
+    <div class="header-controls">
+      <button onclick="playBeep(); reloadState();">🔄 SINCRONIZAR ESTADO</button>
+    </div>
+  </header>
+
+  <main class="office-stage">
+    <div class="office-banner" id="phase-banner">
+      ⭐ Proyecto: Delivery App (Tipo PedidosYa) — Estado de la Oficina en Vivo ⭐
+    </div>
+
+    <div class="desks-grid">
+
+      <!-- MESA 1: TECH LEAD (HUMANO) -->
+      <div class="desk-card" id="card-humano">
+        <div class="bubble" id="bubble-humano">
+          "Revisando arquitectura y preparando clonación en mi MacBook M1."
+        </div>
+        <div class="avatar-wrapper">
+          <!-- Sprite Pixel Art: Humano Tech Lead -->
+          <svg class="pixel-character" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Pelo / Gorra -->
+            <rect x="4" y="1" width="8" height="3" fill="#ffaa00"/>
+            <rect x="3" y="2" width="10" height="2" fill="#ff8800"/>
+            <!-- Cara -->
+            <rect x="4" y="4" width="8" height="5" fill="#ffd1b3"/>
+            <!-- Ojos -->
+            <rect x="5" y="5" width="2" height="2" fill="#222"/>
+            <rect x="9" y="5" width="2" height="2" fill="#222"/>
+            <!-- Barba / Sonrisa -->
+            <rect x="6" y="8" width="4" height="1" fill="#c47a54"/>
+            <!-- Cuerpo / Camiseta Tech -->
+            <rect x="3" y="9" width="10" height="6" fill="#00cc88"/>
+            <rect x="6" y="10" width="4" height="4" fill="#009966"/>
+            <!-- Laptop Pixel -->
+            <rect x="4" y="13" width="8" height="2" fill="#cbd5e1"/>
+          </svg>
+        </div>
+        <div class="desk-info">
+          <div class="member-name">BENJA (TECH LEAD)</div>
+          <div class="member-role">🧑‍💻 Ingeniero Jr. / Dueño</div>
+          <span class="status-pill status-active" id="status-humano">SUPERVISANDO</span>
+          <div class="current-task-box">
+            <span>TAREA ACTUAL:</span>
+            <div id="task-humano">Preparando traspaso y clonación en MacBook M1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MESA 2: AGENTE 1 (ARQUITECTO & QA) -->
+      <div class="desk-card active-work" id="card-agente_1">
+        <div class="bubble" id="bubble-agente_1">
+          "Docker Compose y schemas PostgreSQL generados para ARM64. ¡Listos!"
+        </div>
+        <div class="avatar-wrapper">
+          <!-- Sprite Pixel Art: Agente Arquitecto -->
+          <svg class="pixel-character" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Chasis Robot / Cabeza -->
+            <rect x="4" y="1" width="8" height="2" fill="#718096"/>
+            <rect x="3" y="3" width="10" height="6" fill="#00f0ff"/>
+            <rect x="2" y="5" width="1" height="3" fill="#ffe600"/> <!-- Antena izq -->
+            <rect x="13" y="5" width="1" height="3" fill="#ffe600"/> <!-- Antena der -->
+            <!-- Visor Digital -->
+            <rect x="4" y="5" width="8" height="3" fill="#0a192f"/>
+            <rect x="5" y="6" width="2" height="1" fill="#00ff88"/>
+            <rect x="9" y="6" width="2" height="1" fill="#00ff88"/>
+            <!-- Torso Hardware -->
+            <rect x="4" y="9" width="8" height="6" fill="#4a5568"/>
+            <rect x="6" y="10" width="4" height="4" fill="#a0aec0"/>
+            <circle cx="8" cy="12" r="1" fill="#00f0ff"/>
+          </svg>
+        </div>
+        <div class="desk-info">
+          <div class="member-name">AGENTE 1 (ARCHITECT)</div>
+          <div class="member-role">📐 Arquitectura y QA</div>
+          <span class="status-pill status-working" id="status-agente_1">DISEÑANDO</span>
+          <div class="current-task-box">
+            <span>TAREA ACTUAL:</span>
+            <div id="task-agente_1">Creando docker-compose.yml y contratos base</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MESA 3: AGENTE 2 (CORE DEVELOPER) -->
+      <div class="desk-card" id="card-agente_2">
+        <div class="bubble" id="bubble-agente_2">
+          "Esperando luz verde de la Fase 1 para codificar la máquina de estados."
+        </div>
+        <div class="avatar-wrapper">
+          <!-- Sprite Pixel Art: Agente Developer -->
+          <svg class="pixel-character" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Pelo Violeta Cyberpunk -->
+            <rect x="4" y="1" width="8" height="3" fill="#bd00ff"/>
+            <rect x="3" y="3" width="10" height="2" fill="#9900cc"/>
+            <!-- Cara -->
+            <rect x="4" y="5" width="8" height="4" fill="#ffd1b3"/>
+            <!-- Gafas de Realidad / Código -->
+            <rect x="3" y="5" width="10" height="2" fill="#ff0055"/>
+            <!-- Ropa Dev -->
+            <rect x="3" y="9" width="10" height="6" fill="#1a202c"/>
+            <rect x="6" y="10" width="4" height="4" fill="#bd00ff"/>
+          </svg>
+        </div>
+        <div class="desk-info">
+          <div class="member-name">AGENTE 2 (DEVELOPER)</div>
+          <div class="member-role">💻 NestJS & Frontend</div>
+          <span class="status-pill status-idle" id="status-agente_2">EN ESPERA</span>
+          <div class="current-task-box">
+            <span>TAREA ACTUAL:</span>
+            <div id="task-agente_2">Esperando inicio de Fase 1 (Pedidos)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- TABLERO KANBAN DE SEGUIMIENTO -->
+  <section class="kanban-section">
+    <div class="kanban-header">
+      <div class="kanban-title">📋 TABLERO DE TAREAS DEL EQUIPO</div>
+      <div style="font-size: 18px; color: var(--accent-yellow);">Fuente: team-status.json</div>
+    </div>
+    <div class="kanban-grid" id="kanban-board">
+      <div class="kanban-col">
+        <div class="col-title" style="color: #cbd5e1;">BACKLOG</div>
+        <div id="col-backlog">
+          <div class="task-item">
+            <div>Fase 1: Contrato y Outbox de Pedidos</div>
+            <span class="task-badge" style="background:#4a5568;">Agente 2</span>
+          </div>
+        </div>
+      </div>
+      <div class="kanban-col">
+        <div class="col-title" style="color: var(--accent-yellow);">POR HACER</div>
+        <div id="col-todo">
+          <div class="task-item">
+            <div>Clonar y ejecutar en MacBook M1</div>
+            <span class="task-badge" style="background:var(--accent-green); color:#000;">Benja</span>
+          </div>
+        </div>
+      </div>
+      <div class="kanban-col">
+        <div class="col-title" style="color: var(--accent-cyan);">EN PROGRESO</div>
+        <div id="col-in_progress">
+          <div class="task-item">
+            <div>Dashboard Pixel Art del Equipo</div>
+            <span class="task-badge" style="background:var(--accent-cyan); color:#000;">Agente 1</span>
+          </div>
+        </div>
+      </div>
+      <div class="kanban-col">
+        <div class="col-title" style="color: var(--accent-green);">COMPLETADO</div>
+        <div id="col-done">
+          <div class="task-item">
+            <div>Estructura Monorepo y Carpetas</div>
+            <span class="task-badge" style="background:var(--accent-green); color:#000;">Agente 1</span>
+          </div>
+          <div class="task-item">
+            <div>Docker Compose (Postgres, Rabbit, Redis)</div>
+            <span class="task-badge" style="background:var(--accent-green); color:#000;">Agente 1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Antigravity AI Multi-Agent Workspace • PedidosYa Clone Architecture • Diseñado para aprender y construir sin agobios.
+  </footer>
+
+  <script>
+    // Sintetizador Web Audio API para beeps 8-bit retro (sin archivos de audio externos)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq = 440, type = 'square', duration = 0.08) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    // Intentar leer "../../team-status.json" de forma dinámica si se sirve vía HTTP
+    async function reloadState() {
+      try {
+        const res = await fetch('../../team-status.json?t=' + Date.now());
+        if (!res.ok) throw new Error("No se pudo cargar el json");
+        const data = await res.json();
+        renderData(data);
+      } catch (err) {
+        console.log("Nota: Viendo estado local por defecto (si abres index.html directo con file://)");
+      }
+    }
+
+    function renderData(data) {
+      if (!data) return;
+      document.getElementById('current-phase-badge').innerText = `FASE ${data.current_phase}: ${data.phase_title}`;
+      
+      for (const [key, member] of Object.entries(data.members)) {
+        const bubble = document.getElementById(`bubble-${key}`);
+        const status = document.getElementById(`status-${key}`);
+        const task = document.getElementById(`task-${key}`);
+        const card = document.getElementById(`card-${key}`);
+
+        if (bubble) bubble.innerText = `"${member.dialog_bubble}"`;
+        if (task) task.innerText = member.current_task;
+        if (status) {
+          status.innerText = member.status_label;
+          status.className = `status-pill status-${member.status}`;
+        }
+        if (card) {
+          if (member.status === 'working') card.classList.add('active-work');
+          else card.classList.remove('active-work');
+        }
+      }
+    }
+
+    // Carga inicial
+    reloadState();
+  </script>
+</body>
+</html>

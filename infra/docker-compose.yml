@@ -1,0 +1,73 @@
+services:
+  # -------------------------------------------------------------
+  # PostgreSQL 16: Base de Datos Relacional Principal
+  # Un schema aislado por cada microservicio
+  # Totalmente nativo para arquitectura ARM64 (Apple Silicon M1)
+  # -------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: delivery_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: delivery_admin
+      POSTGRES_PASSWORD: delivery_secret_2026
+      POSTGRES_DB: delivery_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U delivery_admin -d delivery_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------
+  # RabbitMQ 3.13: Bus de Eventos Asíncronos (AMQP)
+  # Incluye panel web de administración en el puerto 15672
+  # -------------------------------------------------------------
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: delivery_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"     # Protocolo AMQP para microservicios
+      - "15672:15672"   # Panel de control web (Dashboard)
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------
+  # Redis 7: Caché en Memoria y Geolocalización (Redis Geo)
+  # Para menús rápidos y coordenadas de repartidores
+  # -------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: delivery_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  redis_data:
+    driver: local
