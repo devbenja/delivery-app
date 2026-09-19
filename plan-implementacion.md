@@ -42,6 +42,12 @@
 - **Límites de Recursos:** Topes de memoria en `docker-compose.yml` (máximo 1.2 GB sumando Postgres, RabbitMQ y Redis) para garantizar fluidez en modelos de 8 GB o 16 GB de RAM unificada.
 - **Testing Rápido:** **Vitest** en lugar de Jest tradicional para aprovechar el soporte nativo ESM y paralelismo de núcleos Apple Silicon.
 
+### 2.4 Mapas, Geolocalización y Ruteo (Estrategia Open Source y Self-Hosted)
+- **Visualización Cartográfica:** **MapLibre GL** (librería open-source para React Native y React, libre de ataduras de Google Maps / Apple Maps).
+- **Búsqueda de Direcciones (Geocoding):** Integración con **Nominatim / LocationIQ** (Free tiers generosos de miles de consultas diarias).
+- **Indexación y Búsqueda de Repartidores:** **Redis 7 Geo** (`GEOADD`, `GEOSEARCH`) para filtrar motos cercanas en radio de kilómetros en menos de 2 milisegundos sin consultar disco.
+- **Motor de Ruteo y Distancias (Self-Hosted):** Contenedor Docker con **OSRM (Open Source Routing Machine)** alimentado con datos libres de **OpenStreetMap (.osm.pbf)**. Permite calcular rutas, tiempos de entrega (ETA) y matrices de distancia a **$0 USD en llamadas de API**. *(Ver ADR-001 en `/docs/adr/`)*.
+
 ---
 
 ## 3. Estructura del Monorepo
@@ -165,17 +171,19 @@
 
 ---
 
-### Fase 6 — Despacho y Tracking en Tiempo Real (GPS + WebSockets)
+### Fase 6 — Despacho y Tracking en Tiempo Real (GPS + WebSockets + OpenStreetMap)
 
-**Objetivo:** Saber dónde están los repartidores en el mapa y asignar el más cercano.
+**Objetivo:** Localizar a los repartidores en tiempo real, calcular rutas precisas y asignar el pedido a la moto más cercana sin incurrir en costos de Google Maps.
 
-- [ ] Concepto explicado: *¿Cómo hace Redis para calcular en 2 milisegundos qué moto está a menos de 10 cuadras de una hamburguesería?*
-- [ ] Servicio `despacho` con almacenamiento de coordenadas GPS en Redis Geo.
-- [ ] Canal WebSocket en el Gateway para retransmitir la posición de la moto.
-- [ ] `/apps/repartidor-mobile`: App Expo simple con botón "Enviar mi GPS".
+- [ ] Concepto explicado: *¿Por qué Redis Geo para proximidad inmediata y OpenStreetMap/OSRM para ruteo en lugar de pagar miles de dólares a Google Maps?*
+- [ ] Servicio `despacho` con almacenamiento y filtrado de coordenadas GPS en **Redis 7 Geo** (`GEOADD`, `GEOSEARCH`).
+- [ ] Motor de Ruteo **OSRM (Open Source Routing Machine)** en Docker con datos de **OpenStreetMap (.osm.pbf)** para calcular distancias, rutas y ETA a $0 USD.
+- [ ] Canal WebSocket en el Gateway para streaming de coordenadas en vivo hacia los clientes.
+- [ ] `/apps/repartidor-mobile`: App Expo simple con emisión periódica de GPS.
+- [ ] Visualización en mapa en `/apps/cliente-mobile` usando **MapLibre GL** (open source).
 
 > **¿Qué aprenderás en esta fase?**
-> Índices geoespaciales y comunicación bidireccional en tiempo real con WebSockets.
+> Cómo combinar memoria RAM (Redis Geo) para búsquedas de proximidad en milisegundos con motores de ruteo abiertos (OSRM + OpenStreetMap) para crear un sistema de logística profesional sin dependencia de APIs comerciales caras.
 
 ---
 
