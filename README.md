@@ -27,35 +27,34 @@
 
 ## 🍎 Guía de Inicio Rápido en tu MacBook M1 (Apple Silicon)
 
-Cuando abras tu MacBook M1, sigue estos sencillos pasos:
+> 📖 **¿Primera vez configurando tu Mac?** Sigue la [Guía Maestra Paso a Paso para MacBook M1](docs/guia-m1-setup.md) con analogías e instrucciones detalladas.
 
-### 1. Clonar el repositorio
-Abre tu terminal en la carpeta donde guardas tus proyectos:
+Si ya tienes las herramientas instaladas (**Node 20**, **pnpm** y **OrbStack**), sigue estos sencillos pasos:
+
+### 1. Clonar el repositorio e instalar dependencias
 ```bash
-git clone <URL_DE_TU_REPOSITORIO> nombre-app
-cd nombre-app
+git clone <URL_DE_TU_REPOSITORIO> delivery-app
+cd delivery-app
+pnpm install
 ```
 
-### 2. Verificar herramientas instaladas
-Asegúrate de tener instalado en tu Mac:
-- **Node.js LTS (v20+):** Puedes verificar con `node -v`.
-- **Docker:** Te recomendamos instalar **OrbStack** ([orbstack.dev](https://orbstack.dev)) o **Docker Desktop**. *OrbStack es 10 veces más liviano y rápido en chips M1.*
-
-### 3. Levantar la infraestructura base (Fase 0)
-Desde la raíz del proyecto, ejecuta:
+### 2. Levantar la infraestructura base (Fase 0)
+Con un solo comando desde la raíz:
 ```bash
-cd infra
-docker compose up -d
+pnpm infra:up
 ```
-Verifica que los 3 contenedores estén corriendo:
+
+Verifica la salud de los contenedores:
+```bash
+pnpm infra:status
+```
 - **PostgreSQL:** Puerto `5432` (con los schemas de cada servicio ya creados).
 - **RabbitMQ:** Panel web en [http://localhost:15672](http://localhost:15672) (Usuario: `guest` / Password: `guest`).
 - **Redis:** Puerto `6379`.
 
-### 4. Abrir tu Tablero Pixel Art
-Abre el visor de la oficina en tu navegador:
+### 3. Abrir tu Tablero Pixel Art
 ```bash
-open apps/pixel-dashboard/index.html
+pnpm dashboard
 ```
 
 ---

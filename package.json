@@ -1,0 +1,17 @@
+{
+  "name": "delivery-app-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Marketplace de Delivery Escalable (Tipo PedidosYa) - Monorepo Híbrido",
+  "scripts": {
+    "infra:up": "docker compose -f infra/docker-compose.yml up -d",
+    "infra:down": "docker compose -f infra/docker-compose.yml down",
+    "infra:logs": "docker compose -f infra/docker-compose.yml logs -f",
+    "infra:status": "docker compose -f infra/docker-compose.yml ps",
+    "dashboard": "open apps/pixel-dashboard/index.html"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

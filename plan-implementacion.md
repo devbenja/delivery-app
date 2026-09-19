@@ -35,6 +35,13 @@
 - **Panel de Administración (Backoffice):** **React + Vite / Tailwind** (métricas y gestión de comercios).
 - **Dashboard Pixel Art del Equipo:** **HTML5 Canvas / Vite** (oficina virtual retro que muestra el estado de las tareas de los agentes).
 
+### 2.3 Rendimiento y Entorno Local (MacBook Air M1 / Apple Silicon)
+- **Gestor de Paquetes:** **pnpm** con Workspaces (`pnpm-workspace.yaml`) para evitar duplicación de `node_modules`, ahorrando hasta un 70% de espacio en disco y cuidando la vida útil del SSD.
+- **Motor de Contenedores:** **OrbStack** (recomendado sobre Docker Desktop) para arrancar en 2 segundos con menos de 100 MB de RAM y consumo mínimo de batería.
+- **Compilación Ultrarrápida:** **SWC** en NestJS (`nest start -b swc`) para compilar a velocidades nativas sin calentar el procesador M1 (refrigeración pasiva).
+- **Límites de Recursos:** Topes de memoria en `docker-compose.yml` (máximo 1.2 GB sumando Postgres, RabbitMQ y Redis) para garantizar fluidez en modelos de 8 GB o 16 GB de RAM unificada.
+- **Testing Rápido:** **Vitest** en lugar de Jest tradicional para aprovechar el soporte nativo ESM y paralelismo de núcleos Apple Silicon.
+
 ---
 
 ## 3. Estructura del Monorepo
@@ -61,6 +68,9 @@
 │   ├── /api                       # Especificaciones OpenAPI 3.1 (REST)
 │   └── /events                    # Especificaciones AsyncAPI (RabbitMQ)
 │
+├── /docs                          # Documentación y registros de decisiones
+│   └── guia-m1-setup.md           # Guía paso a paso para MacBook Air M1
+│
 └── /infra                         # Infraestructura Docker local
     └── docker-compose.yml         # Postgres, RabbitMQ y Redis
 ```
@@ -73,14 +83,16 @@
 
 ### Fase 0 — Entorno Base y el Tablero Pixel Art
 
-**Objetivo:** Levantar la infraestructura mínima necesaria y el visor visual de tu equipo de IA.
+**Objetivo:** Levantar la infraestructura mínima necesaria y el visor visual de tu equipo de IA optimizado para tu MacBook Air M1.
 
-- [ ] Estructura base de carpetas del proyecto.
-- [ ] `docker-compose.yml` básico con **PostgreSQL**, **RabbitMQ** y **Redis**.
-- [ ] Módulo `/apps/pixel-dashboard`: interfaz web sencilla estilo oficina retro pixel art que lee un archivo `team-status.json` para mostrar qué está haciendo cada agente.
+- [x] Estructura base de carpetas del proyecto y configuración de monorepo con `pnpm`.
+- [x] `docker-compose.yml` con límites de memoria M1 para **PostgreSQL**, **RabbitMQ** y **Redis**.
+- [x] Guía paso a paso de instalación y configuración pedagógica en [`docs/guia-m1-setup.md`](docs/guia-m1-setup.md).
+- [ ] Módulo `/apps/pixel-dashboard`: interfaz web estilo oficina retro pixel art sincronizada con `team-status.json`.
+- [ ] Ejecutar `pnpm infra:up` en la Mac y validar salud de los 3 contenedores.
 
 > **¿Qué aprenderás en esta fase?**
-> Cómo Docker permite levantar una base de datos, un bus de mensajes y una memoria caché con un solo comando sin instalar nada raro en tu computadora.
+> Cómo Docker/OrbStack y un gestor eficiente como `pnpm` permiten levantar un ecosistema distribuido completo (Postgres, RabbitMQ, Redis) con un solo comando, de forma silenciosa y sin saturar la memoria de tu Mac.
 
 ---
 

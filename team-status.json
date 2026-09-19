@@ -2,7 +2,7 @@
   "project_name": "Delivery App (Estilo PedidosYa)",
   "current_phase": 0,
   "phase_title": "Fase 0 — Entorno Base e Infraestructura",
-  "last_updated": "2026-09-17T16:15:00Z",
+  "last_updated": "2026-09-19T10:25:00Z",
   "members": {
     "humano": {
       "id": "humano",
@@ -10,19 +10,19 @@
       "role": "Product Owner / Tech Lead",
       "avatar_type": "leader",
       "status": "active",
-      "current_task": "Preparando traspaso y clonación en MacBook M1",
-      "status_label": "Supervisando",
-      "dialog_bubble": "¡Revisando que el entorno y el plan estén listos para arrancar!"
+      "current_task": "Siguiendo la Guía Maestra M1 para levantar entorno",
+      "status_label": "Configurando",
+      "dialog_bubble": "¡Preparando la MacBook Air M1 con OrbStack, pnpm y Docker!"
     },
     "agente_1": {
       "id": "agente_1",
       "name": "Agente 1 (Arquitecto & QA)",
       "role": "Arquitecto de Software y Pruebas",
       "avatar_type": "architect",
-      "status": "working",
-      "current_task": "Creando docker-compose.yml y contratos base",
-      "status_label": "Diseñando",
-      "dialog_bubble": "Infraestructura base para Postgres, RabbitMQ y Redis lista en ARM64."
+      "status": "active",
+      "current_task": "Optimizaciones M1, pnpm y guía pedagógica completadas",
+      "status_label": "Asesorando",
+      "dialog_bubble": "Guía paso a paso para MacBook M1 lista en docs/guia-m1-setup.md."
     },
     "agente_2": {
       "id": "agente_2",
@@ -32,7 +32,7 @@
       "status": "idle",
       "current_task": "Esperando inicio de codificación de la Fase 1 (Pedidos)",
       "status_label": "En espera",
-      "dialog_bubble": "Listo para programar los módulos de NestJS apenas se aprueben los contratos."
+      "dialog_bubble": "Listo para programar los módulos de NestJS con SWC apenas se aprueben los contratos."
     }
   },
   "tasks": [
@@ -45,27 +45,41 @@
     },
     {
       "id": "t-002",
-      "title": "Docker Compose (Postgres, RabbitMQ, Redis)",
+      "title": "Docker Compose optimizado M1 (Postgres, RabbitMQ, Redis)",
       "phase": 0,
       "assignee": "agente_1",
       "status": "done"
     },
     {
       "id": "t-003",
-      "title": "Dashboard Pixel Art del Equipo",
+      "title": "Guía de Instalación y Configuración M1 (docs/guia-m1-setup.md)",
       "phase": 0,
       "assignee": "agente_1",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "t-004",
-      "title": "Clonar y ejecutar en MacBook M1",
+      "title": "Configuración pnpm Workspaces y Scripts Raíz",
+      "phase": 0,
+      "assignee": "agente_1",
+      "status": "done"
+    },
+    {
+      "id": "t-005",
+      "title": "Dashboard Pixel Art del Equipo",
+      "phase": 0,
+      "assignee": "agente_1",
+      "status": "done"
+    },
+    {
+      "id": "t-006",
+      "title": "Ejecutar pnpm infra:up y verificar salud en MacBook M1",
       "phase": 0,
       "assignee": "humano",
       "status": "todo"
     },
     {
-      "id": "t-005",
+      "id": "t-007",
       "title": "Fase 1: Contrato y Outbox de Pedidos",
       "phase": 1,
       "assignee": "agente_2",
@@ -73,7 +87,7 @@
     }
   ],
   "checkpoint": {
-    "condition_technical": "Ejecutar docker compose up -d y ver todos los contenedores saludables.",
+    "condition_technical": "Ejecutar pnpm infra:up y ver todos los contenedores saludables en pnpm infra:status.",
     "condition_pedagogic": "Explicar por qué aislamos schemas en Postgres y para qué sirve Redis junto a Postgres."
   }
 }
