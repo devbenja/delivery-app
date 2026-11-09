@@ -25,9 +25,7 @@
 
 ---
 
-## 🍎 Guía de Inicio Rápido en tu MacBook M1 (Apple Silicon)
-
-> 📖 **¿Primera vez configurando tu Mac?** Sigue la [Guía Maestra Paso a Paso para MacBook M1](docs/guia-m1-setup.md) con analogías e instrucciones detalladas.
+## 🍎 Guía de Inicio Rápido
 
 Si ya tienes las herramientas instaladas (**Node 20**, **pnpm** y **OrbStack**), sigue estos sencillos pasos:
 
@@ -59,9 +57,9 @@ pnpm dashboard
 
 ---
 
-## 🤖 El Mensaje para tu Agente en la Mac (Copiar y Pegar)
+## 🤖 El Mensaje para tu Agente (Copiar y Pegar)
 
-Una vez que tengas el proyecto abierto en tu IDE en la Mac (Antigravity o tu editor con agente de IA), **cópiale y pégale este mensaje exacto en el chat**:
+Una vez que tengas el proyecto abierto en tu IDE  (Antigravity o tu editor con agente de IA), **cópiale y pégale este mensaje exacto en el chat**:
 
 ```text
 Hola. Eres el Agente 1 (Arquitecto y QA) de nuestro equipo. 
